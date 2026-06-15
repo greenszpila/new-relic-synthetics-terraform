@@ -1,0 +1,13 @@
+# Example Terraform Variables File
+# Copy this file to terraform.tfvars.prod or terraform.tfvars.dev
+# and fill in your actual values
+
+# Your New Relic Account ID
+account_id = 0000000  # Replace with your actual account ID
+
+# Region: "US" or "EU"
+region = "EU"  # Change to "US" if your account is in US region
+
+# NOTE: API Key should be set via environment variable
+# export NEW_RELIC_API_KEY="your-api-key-here"
+# DO NOT commit your actual API key to version control!

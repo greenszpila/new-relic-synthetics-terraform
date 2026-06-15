@@ -1,0 +1,50 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfplan
+*.tfstate.d/
+
+# Terraform variables (contain sensitive account IDs)
+*.tfvars
+!terraform.tfvars.example
+terraform.tfvars.dev
+terraform.tfvars.prod
+
+# Provider config (may contain API keys)
+provider.tf
+
+# Generated files
+generated.tf.backup
+generated_clean.tf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Backups
+*.backup
+*.old
+imports.tf.prod.backup
+synthetics_monitors.tf.old

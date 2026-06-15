@@ -1,0 +1,139 @@
+/**
+ * Terraform Variables for New Relic Synthetic Monitors
+ *
+ * These variables can be overridden in terraform.tfvars or via CLI
+ */
+
+variable "account_id" {
+  description = "New Relic Account ID"
+  type        = number
+  default     = 7697931
+}
+
+variable "region" {
+  description = "New Relic region (US or EU)"
+  type        = string
+  default     = "EU"
+
+  validation {
+    condition     = contains(["US", "EU"], var.region)
+    error_message = "Region must be either US or EU."
+  }
+}
+
+variable "monitor_locations" {
+  description = "Default synthetic monitor locations"
+  type        = list(string)
+  default = [
+    "AWS_EU_WEST_1",
+    "AWS_EU_CENTRAL_1"
+  ]
+}
+
+variable "monitor_frequency" {
+  description = "Default monitor check frequency in minutes"
+  type        = number
+  default     = 10
+
+  validation {
+    condition     = contains([1, 5, 10, 15, 30, 60, 360, 720, 1440], var.monitor_frequency)
+    error_message = "Frequency must be one of: 1, 5, 10, 15, 30, 60, 360, 720, 1440 minutes."
+  }
+}
+
+variable "monitor_status" {
+  description = "Default monitor status (ENABLED or DISABLED)"
+  type        = string
+  default     = "ENABLED"
+
+  validation {
+    condition     = contains(["ENABLED", "DISABLED"], var.monitor_status)
+    error_message = "Status must be either ENABLED or DISABLED."
+  }
+}
+
+variable "runtime_type_version" {
+  description = "Runtime version for scripted monitors"
+  type        = string
+  default     = "16.10"
+}
+
+variable "enable_screenshots" {
+  description = "Enable screenshots on failure for browser monitors"
+  type        = bool
+  default     = true
+}
+
+variable "verify_ssl" {
+  description = "Verify SSL certificates"
+  type        = bool
+  default     = true
+}
+
+variable "common_tags" {
+  description = "Common tags to apply to all monitors"
+  type        = map(list(string))
+  default = {
+    Environment = ["Production"]
+    ManagedBy   = ["Terraform"]
+  }
+}
+
+variable "alert_policy_id" {
+  description = "Alert policy ID for synthetic monitors (optional)"
+  type        = number
+  default     = null
+}
+
+variable "validation_string" {
+  description = "Default validation string for simple monitors"
+  type        = string
+  default     = ""
+}
+
+variable "timeout" {
+  description = "Request timeout in seconds for simple monitors"
+  type        = number
+  default     = 10
+}
+
+# Available New Relic Synthetic Locations
+# Reference: https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/administration/synthetic-public-minion-ips/
+
+locals {
+  available_locations = {
+    # AWS Locations
+    aws_eu_west_1      = "AWS_EU_WEST_1"      # Dublin, Ireland
+    aws_eu_central_1   = "AWS_EU_CENTRAL_1"   # Frankfurt, Germany
+    aws_eu_west_2      = "AWS_EU_WEST_2"      # London, England
+    aws_eu_west_3      = "AWS_EU_WEST_3"      # Paris, France
+    aws_eu_north_1     = "AWS_EU_NORTH_1"     # Stockholm, Sweden
+    aws_eu_south_1     = "AWS_EU_SOUTH_1"     # Milan, Italy
+    aws_us_east_1      = "AWS_US_EAST_1"      # Washington DC, USA
+    aws_us_east_2      = "AWS_US_EAST_2"      # Columbus, OH, USA
+    aws_us_west_1      = "AWS_US_WEST_1"      # San Francisco, CA, USA
+    aws_us_west_2      = "AWS_US_WEST_2"      # Portland, OR, USA
+    aws_ca_central_1   = "AWS_CA_CENTRAL_1"   # Montreal, Quebec, Canada
+    aws_sa_east_1      = "AWS_SA_EAST_1"      # São Paulo, Brazil
+    aws_ap_east_1      = "AWS_AP_EAST_1"      # Hong Kong
+    aws_ap_south_1     = "AWS_AP_SOUTH_1"     # Mumbai, India
+    aws_ap_southeast_1 = "AWS_AP_SOUTHEAST_1" # Singapore
+    aws_ap_southeast_2 = "AWS_AP_SOUTHEAST_2" # Sydney, Australia
+    aws_ap_northeast_1 = "AWS_AP_NORTHEAST_1" # Tokyo, Japan
+    aws_ap_northeast_2 = "AWS_AP_NORTHEAST_2" # Seoul, South Korea
+  }
+
+  # Tag structure helper
+  default_tags = {
+    for key, values in var.common_tags : key => {
+      key    = key
+      values = values
+    }
+  }
+}
+
+# Output available locations for reference
+output "available_synthetic_locations" {
+  description = "Available New Relic Synthetic monitoring locations"
+  value       = local.available_locations
+}
