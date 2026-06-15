@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "newrelic" {
-  account_id = 7697931  # Your New Relic Account ID
+  account_id = 123456  # Your New Relic Account ID
   api_key    = "NRAK-XXXXX"  # Replace with your API key or use env var NEW_RELIC_API_KEY
   region     = "EU"  # Use "EU" for EU region, or "US" for US region
 }
